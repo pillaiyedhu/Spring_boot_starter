@@ -2,7 +2,10 @@ package com.yedhu.springbootstarter.controllers;
 
 
 import com.yedhu.springbootstarter.entity.Department;
+import com.yedhu.springbootstarter.exceptions.DepartmentNotFoundException;
 import com.yedhu.springbootstarter.services.DepartmentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +17,14 @@ public class DepartmentController {
     @Autowired
     private DepartmentService departmentService;
 
+    private final Logger LOGGER = LoggerFactory.getLogger(DepartmentController.class);
+
 
     //the below method is to post a single department in the database
 
     @PostMapping("/department")
     public Department saveDepartment(@RequestBody Department department){
+        LOGGER.info("Inside save Departme nt");
         return departmentService.saveDepartment(department);
     }
 
@@ -32,7 +38,7 @@ public class DepartmentController {
     //the below method is to get department according to the id
 
     @GetMapping("/departments/{id}")
-    public Department getDepartmentById(@PathVariable("id") int departmentId){
+    public Department getDepartmentById(@PathVariable("id") int departmentId) throws DepartmentNotFoundException {
         return departmentService.getDepartmentById(departmentId);
     }
 

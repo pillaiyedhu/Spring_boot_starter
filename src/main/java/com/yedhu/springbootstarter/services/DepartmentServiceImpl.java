@@ -2,12 +2,14 @@ package com.yedhu.springbootstarter.services;
 
 
 import com.yedhu.springbootstarter.entity.Department;
+import com.yedhu.springbootstarter.exceptions.DepartmentNotFoundException;
 import com.yedhu.springbootstarter.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class DepartmentServiceImpl implements  DepartmentService{
@@ -26,8 +28,15 @@ public class DepartmentServiceImpl implements  DepartmentService{
     }
 
     @Override
-    public Department getDepartmentById(int departmentId) {
-        return departmentRepository.findById(departmentId).get();
+    public Department getDepartmentById(int departmentId) throws DepartmentNotFoundException {
+        Optional<Department> department = departmentRepository.findById(departmentId);
+        if(department.isPresent()){
+            return department.get();
+        }
+        else{
+            throw new DepartmentNotFoundException("Department not found");
+        }
+
     }
 
     @Override
@@ -56,4 +65,6 @@ public class DepartmentServiceImpl implements  DepartmentService{
     public Department getDepartmentByName(String departmentName) {
         return departmentRepository.findByDepartmentNameIgnoreCase(departmentName);
     }
+
+
 }
